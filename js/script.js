@@ -21,7 +21,7 @@ var grassMaxHeightDisp = document.getElementById('grassMaxHeightValue');
 var grassHeightVarSlider = document.getElementById('grassHeightVar');
 var grassHeightVarDisp = document.getElementById('grassHeightVarValue');
   grassHeightVarSlider.min = 0;
-  grassHeightVarSlider.max = canvas.height;
+  grassHeightVarSlider.max = 40;
   grassHeightVarSlider.defaultValue = 33;
   grassHeightVarDisp.innerHTML = grassHeightVarSlider.value;
 var grassAngleSlider = document.getElementById('grassAngle');
@@ -48,6 +48,11 @@ function getRandInt(min, max) {
 function setGrassMaxHeight() {
   grass.max_height = parseInt(grassMaxHeightSlider.value);
   grassMaxHeightDisp.innerHTML = grassMaxHeightSlider.value;
+  if (parseInt(grassHeightVarSlider.value) > parseInt(grassMaxHeightSlider.value)) {
+    grassHeightVarSlider.value = grassMaxHeightSlider.value;
+    setGrassHeightVar();
+  }
+  grassHeightVarSlider.max = grassMaxHeightSlider.value;
   drawGrass();
 }
 
