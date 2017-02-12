@@ -1,7 +1,7 @@
 html {}
 body { margin: 0; }
 h2 { text-align: center; }
-input[type="range"] { display: block; margin: 0 auto; }
+button, input[type="range"] { display: block; margin: 0 auto; }
 .center { text-align: center; }
 .inl-blk { display: inline-block; vertical-align: top; }
 .width-20 { width: 19%; max-width: 19%; }
