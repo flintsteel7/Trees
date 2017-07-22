@@ -80,22 +80,12 @@ function drawGrass() {
   }
 }
 
-DrawTree(n, direction, length)
-
-if n > 0 do
-
-  DrawTrunk(direction, length)
-
-  DrawTree(n-1, 3DRandomAngle(direction), length*Factor(n))
-
-DrawTree(n-1, direction + random % 10, length*Factor(n))
-
-DrawTree(n-1, 3DRandomAngle(direction), length*Factor(n))
-
-else
-
-DrawLeaf()
-
-end if
-
-  end DrawTree
+// pseudo code from http://davis.wpi.edu/~matt/courses/fractals/trees.html
+function drawTree(n, direction, length) {
+  if (n > 0) {
+    drawTrunk(direction, length);
+    drawTree(n - 1, randomAngle(direction), length * Factor(n));
+    drawTree(n - 1, direction + random % 10, length * Factor(n));
+    drawTree(n - 1, randomAngle(direction), length * Factor(n));
+  }
+}
