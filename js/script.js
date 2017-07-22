@@ -79,3 +79,23 @@ function drawGrass() {
     ctx.closePath();
   }
 }
+
+DrawTree(n, direction, length)
+
+if n > 0 do
+
+  DrawTrunk(direction, length)
+
+  DrawTree(n-1, 3DRandomAngle(direction), length*Factor(n))
+
+DrawTree(n-1, direction + random % 10, length*Factor(n))
+
+DrawTree(n-1, 3DRandomAngle(direction), length*Factor(n))
+
+else
+
+DrawLeaf()
+
+end if
+
+  end DrawTree
