@@ -1,0 +1,21 @@
+{
+  "name": "trees",
+  "version": "0.0.1",
+  "description": "2D tree generator using HTML Canvas and JavaScript",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/flintsteel7/Trees.git"
+  },
+  "author": "Peter Turner",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/flintsteel7/Trees/issues"
+  },
+  "homepage": "https://github.com/flintsteel7/Trees#readme"
+}
