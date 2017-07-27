@@ -1,7 +1,7 @@
-var canvas = document.getElementById('mainCanvas');
-var ctx = canvas.getContext('2d');
+const canvas = document.getElementById('mainCanvas');
+const ctx = canvas.getContext('2d');
 
-var grass = {
+let grass = {
   "max_height": 40,
   "height_var": 33,
   "angle": -5,
@@ -12,25 +12,25 @@ var grass = {
 canvas.width = document.documentElement.clientWidth * 0.79;
 canvas.height = document.documentElement.clientHeight;
 
-var grassMaxHeightSlider = document.getElementById('grassMaxHeight');
-var grassMaxHeightDisp = document.getElementById('grassMaxHeightValue');
+const grassMaxHeightSlider = document.getElementById('grassMaxHeight');
+const grassMaxHeightDisp = document.getElementById('grassMaxHeightValue');
   grassMaxHeightSlider.min = 1;
   grassMaxHeightSlider.max = canvas.height;
   grassMaxHeightSlider.defaultValue = 40;
   grassMaxHeightDisp.innerHTML = grassMaxHeightSlider.value;
-var grassHeightVarSlider = document.getElementById('grassHeightVar');
-var grassHeightVarDisp = document.getElementById('grassHeightVarValue');
+const grassHeightVarSlider = document.getElementById('grassHeightVar');
+const grassHeightVarDisp = document.getElementById('grassHeightVarValue');
   grassHeightVarSlider.min = 0;
   grassHeightVarSlider.max = 40;
   grassHeightVarSlider.defaultValue = 33;
   grassHeightVarDisp.innerHTML = grassHeightVarSlider.value;
-var grassAngleSlider = document.getElementById('grassAngle');
-var grassAngleDisp = document.getElementById('grassAngleValue');
+const grassAngleSlider = document.getElementById('grassAngle');
+const grassAngleDisp = document.getElementById('grassAngleValue');
   grassAngleSlider.min = 0;
   grassAngleSlider.max = 45;
   grassAngleSlider.defaultValue = 5;
   grassAngleDisp.innerHTML = grassAngleSlider.value;
-var resetButton = document.getElementById('formReset');
+const resetButton = document.getElementById('formReset');
 
 grassMaxHeightSlider.addEventListener('mouseup', setGrassMaxHeight);
 grassHeightVarSlider.addEventListener('mouseup', setGrassHeightVar);
@@ -70,7 +70,7 @@ function setGrassAngle() {
 
 function drawGrass() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  for (var i = 0; i < canvas.width; i++) {
+  for (let i = 0; i < canvas.width; i++) {
     ctx.beginPath();
     ctx.moveTo(i,canvas.height);
     ctx.lineTo(getRandInt(i - grass.angle, i + grass.angle), getRandInt(canvas.height - grass.max_height, canvas.height - (grass.max_height - grass.height_var)));
