@@ -1,3 +1,5 @@
+"use strict";
+
 const canvas = document.getElementById('mainCanvas');
 const ctx = canvas.getContext('2d');
 
@@ -80,12 +82,16 @@ function drawGrass() {
   }
 }
 
-// pseudo code from http://davis.wpi.edu/~matt/courses/fractals/trees.html
-function drawTree(n, direction, length) {
-  if (n > 0) {
-    drawTrunk(direction, length);
-    drawTree(n - 1, randomAngle(direction), length * Factor(n));
-    drawTree(n - 1, direction + random % 10, length * Factor(n));
-    drawTree(n - 1, randomAngle(direction), length * Factor(n));
-  }
+let center = canvas.width / 2;
+
+function drawCone (center, width, height, taper) {
+  ctx.moveTo(center - (width / 2), canvas.height);
+  ctx.lineTo(center - (taper / 2), canvas.height - height);
+  ctx.lineTo(center + (taper / 2), canvas.height - height);
+  ctx.lineTo(center + (width / 2), canvas.height);
+  ctx.fill();
+  ctx.closePath();
 }
+
+drawCone(canvas.width / 2, 40, 500, 25);
+
