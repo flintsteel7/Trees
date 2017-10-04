@@ -93,5 +93,11 @@ function drawCone (center, width, height, taper) {
   ctx.closePath();
 }
 
+function newDrawCone (start_coords, width, length, taper, angle) {
+  ctx.moveTo(start_coords.x - (width / 2), start_coords.y);
+}
+
 drawCone(canvas.width / 2, 40, 500, 25);
+
+newDrawCone({x: canvas.width / 2, y: canvas.height}, 40, 500, 25, 90);
 
