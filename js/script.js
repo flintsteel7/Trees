@@ -1,7 +1,7 @@
 "use strict";
 
 const canvas = document.getElementById('mainCanvas');
-const ctx = canvas.getContext('2d');
+const c = canvas.getContext('2d');
 
 let grass = {
   "max_height": 40,
@@ -11,8 +11,8 @@ let grass = {
 };
 
 // Calculate canvas size
-canvas.width = document.documentElement.clientWidth * 0.79;
-canvas.height = document.documentElement.clientHeight;
+canvas.width = window.innerWidth * 0.79;
+canvas.height = window.innerHeight;
 
 const grassMaxHeightSlider = document.getElementById('grassMaxHeight');
 const grassMaxHeightDisp = document.getElementById('grassMaxHeightValue');
@@ -71,61 +71,71 @@ function setGrassAngle() {
 }
 
 function drawGrass() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  c.clearRect(0, 0, canvas.width, canvas.height);
   for (let i = 0; i < canvas.width; i++) {
-    ctx.beginPath();
-    ctx.moveTo(i, canvas.height);
-    ctx.lineTo(getRandInt(i - grass.angle, i + grass.angle), getRandInt(canvas.height - grass.max_height, canvas.height - (grass.max_height - grass.height_var)));
-    ctx.strokeStyle = grass.colors[getRandInt(0, grass.colors.length - 1)];
-    ctx.stroke();
-    ctx.closePath();
+    c.beginPath();
+    c.moveTo(i, canvas.height);
+    c.lineTo(getRandInt(i - grass.angle, i + grass.angle), getRandInt(canvas.height - grass.max_height, canvas.height - (grass.max_height - grass.height_var)));
+    c.strokeStyle = grass.colors[getRandInt(0, grass.colors.length - 1)];
+    c.stroke();
+    c.closePath();
   }
 }
 
 function drawTrunk(height, base_width, end_width, branch_lev, position = (canvas.width / 2)) {
-  ctx.beginPath();
-  ctx.moveTo(position - (base_width / 2), canvas.height);
-  ctx.lineTo(position - (end_width / 2), canvas.height - height);
-  ctx.lineTo(position + (end_width / 2), canvas.height - height);
-  ctx.lineTo(position + (base_width / 2), canvas.height);
-  ctx.fillStyle = '#3B2112';
-  ctx.fill();
-  ctx.closePath();
+  c.beginPath();
+  c.moveTo(position - (base_width / 2), canvas.height);
+  c.lineTo(position - (end_width / 2), canvas.height - height);
+  c.lineTo(position + (end_width / 2), canvas.height - height);
+  c.lineTo(position + (base_width / 2), canvas.height);
+  c.fillStyle = '#3B2112';
+  c.fill();
+  c.closePath();
   drawBranch({
     x: position,
     y: canvas.height - height
-  }, height / 2, end_width, ((end_width * end_width) / base_width), 45, branch_lev);
+  }, height * 0.6, end_width, ((end_width * end_width) / base_width), (Math.PI / 4), branch_lev);
+  drawBranch({
+    x: position,
+    y: canvas.height - height
+  }, height * 0.6, end_width, ((end_width * end_width) / base_width), ((3 * Math.PI) / 4), branch_lev);
 }
 
 function drawBranch(start, length, base_width, end_width, angle, branch_lev) {
   if (branch_lev > 0) {
-    const x_dif = length * Math.cos(angle / 180 * Math.PI);
-    const y_dif = length * Math.sin(angle / 180 * Math.PI);
-    ctx.beginPath();
-    ctx.moveTo(start.x, start.y);
-    ctx.lineTo(start.x + x_dif, start.y - y_dif);
-    ctx.strokeStyle = '#3B2112';
-    ctx.stroke();
-    ctx.closePath();
+    const x_dif = length * Math.cos(angle);
+    const y_dif = length * Math.sin(angle);
+    c.beginPath();
+    c.moveTo(start.x, start.y);
+    c.lineTo(start.x + x_dif, start.y - y_dif);
+    c.strokeStyle = '#3B2112';
+    c.stroke();
+    c.closePath();
     if ((branch_lev - 1) > 0) {
       drawBranch({
         x: start.x + x_dif,
         y: start.y - y_dif
-      }, length / 2, end_width, ((end_width * end_width) / base_width), angle, branch_lev - 1);
+      }, length * 0.6, end_width, ((end_width * end_width) / base_width), angle - (Math.PI / 4), branch_lev - 1);
+      drawBranch({
+        x: start.x + x_dif,
+        y: start.y - y_dif
+      }, length * 0.6, end_width, ((end_width * end_width) / base_width), angle + (Math.PI / 4), branch_lev - 1);
     }
-    ctx.beginPath();
-    ctx.moveTo(start.x, start.y);
-    ctx.lineTo(start.x - x_dif, start.y - y_dif);
-    ctx.strokeStyle = '#3B2112';
-    ctx.stroke();
+    /*
+    c.beginPath();
+    c.moveTo(start.x, start.y);
+    c.lineTo(start.x - x_dif, start.y - y_dif);
+    c.strokeStyle = '#3B2112';
+    c.stroke();
     if ((branch_lev - 1) > 0) {
       drawBranch({
         x: start.x - x_dif,
         y: start.y - y_dif
-      }, length / 2, end_width, ((end_width * end_width) / base_width), angle, branch_lev - 1);
+      }, length / 2, end_width, ((end_width * end_width) / base_width), (angle - angle), branch_lev - 1);
     }
+    */
 
   }
 }
 
-drawTrunk(350, 40, 25, 7);
+drawTrunk(300, 40, 25, 7);
