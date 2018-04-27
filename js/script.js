@@ -4,9 +4,9 @@ const canvas = document.getElementById('mainCanvas');
 const c = canvas.getContext('2d');
 
 let tree = {
-  "height": 285,
-  "width": 40,
-  "taper": 15,
+  "height": 300,
+  "width": 80,
+  "taper": 28,
   "branch_lev": 13,
   "branch_angle_var": 10,
   "branch_length_var": 5,
@@ -28,7 +28,7 @@ const treeTrunkHeightSlider = document.getElementById('treeTrunkHeight');
 const treeTrunkHeightDisp = document.getElementById('treeTrunkHeightValue');
 treeTrunkHeightSlider.min = 1;
 treeTrunkHeightSlider.max = canvas.height;
-treeTrunkHeightSlider.defaultValue = Math.round(canvas.height * 0.35);
+treeTrunkHeightSlider.defaultValue = tree.height;
 treeTrunkHeightDisp.innerHTML = treeTrunkHeightSlider.value;
 const treeTrunkWidthSlider = document.getElementById('treeTrunkWidth');
 const treeTrunkWidthDisp = document.getElementById('treeTrunkWidthValue');
@@ -42,25 +42,32 @@ treeTaperSlider.min = 1;
 treeTaperSlider.max = tree.width - 1;
 treeTaperSlider.defaultValue = tree.taper;
 treeTaperDisp.innerHTML = treeTaperSlider.value;
+const treeNumBranchSlider = document.getElementById('treeNumBranch');
+const treeNumBranchDisp = document.getElementById('treeNumBranchValue');
+treeNumBranchSlider.min = 0;
+treeNumBranchSlider.max = 18;
+treeNumBranchSlider.defaultValue = tree.branch_lev;
+treeNumBranchDisp.innerHTML = treeNumBranchSlider.value;
 const treeBranchAngleVarSlider = document.getElementById('treeBranchAngleVariation');
 const treeBranchAngleVarDisp = document.getElementById('treeBranchAngleVariationValue');
 treeBranchAngleVarSlider.min = 0;
-treeBranchAngleVarSlider.max = 30;
+treeBranchAngleVarSlider.max = 35;
 treeBranchAngleVarSlider.defaultValue = tree.branch_angle_var;
 treeBranchAngleVarDisp.innerHTML = treeBranchAngleVarSlider.value;
 const treeBranchLengthVarSlider = document.getElementById('treeBranchLengthVariation');
 const treeBranchLengthVarDisp = document.getElementById('treeBranchLengthVariationValue');
 treeBranchLengthVarSlider.min = 0;
-treeBranchLengthVarSlider.max = 20;
+treeBranchLengthVarSlider.max = 25;
 treeBranchLengthVarSlider.defaultValue = tree.branch_length_var;
 treeBranchLengthVarDisp.innerHTML = treeBranchLengthVarSlider.value;
 
 // Tree listeners
-treeTrunkHeightSlider.addEventListener('mouseup', setTreeTrunkHeight);
-treeTrunkWidthSlider.addEventListener('mouseup', setTreeTrunkWidth);
-treeTaperSlider.addEventListener('mouseup', setTreeTaper);
-treeBranchAngleVarSlider.addEventListener('mouseup', setTreeBranchAngleVariation);
-treeBranchLengthVarSlider.addEventListener('mouseup', setTreeBranchLengthVariation);
+treeTrunkHeightSlider.addEventListener('change', setTreeTrunkHeight);
+treeTrunkWidthSlider.addEventListener('change', setTreeTrunkWidth);
+treeNumBranchSlider.addEventListener('change', setTreeNumBranch);
+treeTaperSlider.addEventListener('change', setTreeTaper);
+treeBranchAngleVarSlider.addEventListener('change', setTreeBranchAngleVariation);
+treeBranchLengthVarSlider.addEventListener('change', setTreeBranchLengthVariation);
 
 
 // Grass controls
@@ -85,9 +92,9 @@ grassAngleDisp.innerHTML = grassAngleSlider.value;
 const resetButton = document.getElementById('formReset');
 
 // Grass listeners
-grassMaxHeightSlider.addEventListener('mouseup', setGrassMaxHeight);
-grassHeightVarSlider.addEventListener('mouseup', setGrassHeightVar);
-grassAngleSlider.addEventListener('mouseup', setGrassAngle);
+grassMaxHeightSlider.addEventListener('change', setGrassMaxHeight);
+grassHeightVarSlider.addEventListener('change', setGrassHeightVar);
+grassAngleSlider.addEventListener('change', setGrassAngle);
 resetButton.addEventListener('onclick', drawScene(tree, grass));
 
 
@@ -105,9 +112,15 @@ function setTreeTrunkHeight() {
 }
 
 function setTreeTrunkWidth() {
-  // TODO update max taper based on width
   tree.width = parseInt(treeTrunkWidthSlider.value);
   treeTrunkWidthDisp.innerHTML = treeTrunkWidthSlider.value;
+  treeTaperSlider.max = treeTrunkWidthSlider.value - 1;
+  drawScene(tree, grass);
+}
+
+function setTreeNumBranch() {
+  tree.branch_lev = parseInt(treeNumBranchSlider.value);
+  treeNumBranchDisp.innerHTML = treeNumBranchSlider.value;
   drawScene(tree, grass);
 }
 
@@ -161,7 +174,10 @@ function drawGrass(grass_params) {
   for (let i = 0; i < canvas.width; i++) {
     c.beginPath();
     c.moveTo(i, canvas.height);
-    c.lineTo(getRandInt(i - grass_params.angle, i + grass_params.angle), getRandInt(canvas.height - grass_params.max_height, canvas.height - (grass_params.max_height - grass_params.height_var)));
+    c.lineTo(
+      getRandInt(i - grass_params.angle, i + grass_params.angle),
+      getRandInt(canvas.height - grass_params.max_height, canvas.height - (grass_params.max_height - grass_params.height_var))
+    );
     c.strokeStyle = grass_params.colors[getRandInt(0, grass_params.colors.length - 1)];
     c.stroke();
     c.closePath();
