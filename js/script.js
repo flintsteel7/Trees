@@ -7,14 +7,15 @@ let tree = {
   "height": 285,
   "width": 40,
   "taper": 15,
-  "branch_lev": 13
-}
+  "branch_lev": 13,
+  "branch_angle_var": 10,
+};
 
 let grass = {
   "max_height": 40,
   "height_var": 33,
   "angle": -5,
-  "colors": ['#1f7a1f', '#29a329', '#33cc33', '#5cd65c', '#85e085']
+  "colors": ['#1f7a1f', '#29a329', '#33cc33', '#5cd65c', '#85e085'],
 };
 
 // Calculate canvas size
@@ -40,11 +41,18 @@ treeTaperSlider.min = 1;
 treeTaperSlider.max = tree.width - 1;
 treeTaperSlider.defaultValue = 15;
 treeTaperDisp.innerHTML = treeTaperSlider.value;
+const treeBranchAngleVarSlider = document.getElementById('treeBranchAngleVariation');
+const treeBranchAngleVarDisp = document.getElementById('treeBranchAngleVariationValue');
+treeBranchAngleVarSlider.min = 0;
+treeBranchAngleVarSlider.max = 50;
+treeBranchAngleVarSlider.defaultValue = 10;
+treeBranchAngleVarDisp.innerHTML = treeBranchAngleVarSlider.value;
 
 // Tree listeners
 treeTrunkHeightSlider.addEventListener('mouseup', setTreeTrunkHeight);
 treeTrunkWidthSlider.addEventListener('mouseup', setTreeTrunkWidth);
 treeTaperSlider.addEventListener('mouseup', setTreeTaper);
+treeBranchAngleVarSlider.addEventListener('mouseup', setTreeBranchAngleVariation);
 
 
 // Grass controls
@@ -74,6 +82,7 @@ grassHeightVarSlider.addEventListener('mouseup', setGrassHeightVar);
 grassAngleSlider.addEventListener('mouseup', setGrassAngle);
 resetButton.addEventListener('onclick', drawScene(tree, grass));
 
+
 // Functions
 function drawScene(tree, grass) {
   c.clearRect(0, 0, canvas.width, canvas.height);
@@ -102,6 +111,12 @@ function setTreeTaper() {
     treeTaperSlider.value = tree.taper;
   }
   treeTaperDisp.innerHTML = treeTaperSlider.value;
+  drawScene(tree, grass);
+}
+
+function setTreeBranchAngleVariation() {
+  tree.branch_angle_var = parseInt(treeBranchAngleVarSlider.value);
+  treeBranchAngleVarDisp.innerHTML = treeBranchAngleVarSlider.value;
   drawScene(tree, grass);
 }
 
@@ -143,11 +158,16 @@ function getRandInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function drawTree(tree_params) {
-  drawTrunk(tree_params.height, tree_params.width, tree_params.width - tree_params.taper, tree_params.branch_lev);
+function calcAngleRandomness(variable) {
+  const posOrNeg = Math.round(Math.random()) * 2 - 1; // produces 1 or -1
+  return (variable * Math.random() * 0.05) * posOrNeg;
 }
 
-function drawTrunk(height, base_width, end_width, branch_lev, position = (canvas.width / 2)) {
+function drawTree(tree_params) {
+  drawTrunk(tree_params.height, tree_params.width, tree_params.width - tree_params.taper, tree_params.branch_lev, tree_params.branch_angle_var);
+}
+
+function drawTrunk(height, base_width, end_width, branch_lev, branch_angle_var, position = (canvas.width / 2)) {
   c.beginPath();
   c.moveTo(position - (base_width / 2), canvas.height);
   c.lineTo(position - (end_width / 2), canvas.height - height);
@@ -159,14 +179,14 @@ function drawTrunk(height, base_width, end_width, branch_lev, position = (canvas
   drawBranch({
     x: position,
     y: canvas.height - height
-  }, height * 0.6, end_width, ((end_width * end_width) / base_width), (Math.PI / 4), branch_lev);
+  }, height * 0.6, end_width, ((end_width * end_width) / base_width), (Math.PI / 4 + calcAngleRandomness(branch_angle_var)), branch_lev, branch_angle_var);
   drawBranch({
     x: position,
     y: canvas.height - height
-  }, height * 0.6, end_width, ((end_width * end_width) / base_width), ((3 * Math.PI) / 4), branch_lev);
+  }, height * 0.6, end_width, ((end_width * end_width) / base_width), ((3 * Math.PI) / 4 + calcAngleRandomness(branch_angle_var)), branch_lev, branch_angle_var);
 }
 
-function drawBranch(start, length, base_width, end_width, angle, branch_lev) {
+function drawBranch(start, length, base_width, end_width, angle, branch_lev, branch_angle_var) {
   if (branch_lev > 0) {
     const end = {
       x: start.x + (length * Math.cos(angle)),
@@ -188,8 +208,8 @@ function drawBranch(start, length, base_width, end_width, angle, branch_lev) {
     c.fill();
     c.closePath();
     if ((branch_lev - 1) > 0) {
-      drawBranch(end, length * 0.6, end_width, ((end_width * end_width) / base_width), angle - (Math.PI / 4), branch_lev - 1);
-      drawBranch(end, length * 0.6, end_width, ((end_width * end_width) / base_width), angle + (Math.PI / 4), branch_lev - 1);
+      drawBranch(end, length * 0.6, end_width, ((end_width * end_width) / base_width), angle - (Math.PI / 4 + calcAngleRandomness(branch_angle_var)), branch_lev - 1, branch_angle_var);
+      drawBranch(end, length * 0.6, end_width, ((end_width * end_width) / base_width), angle + (Math.PI / 4 + calcAngleRandomness(branch_angle_var)), branch_lev - 1, branch_angle_var);
     }
   }
 }
