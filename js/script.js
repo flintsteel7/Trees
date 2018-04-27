@@ -1,5 +1,10 @@
 "use strict";
 
+// TODO
+// add ability to save any particular tree
+   // (draw functions would have to create an object or array of numbers generated)
+   // (saved array of numbers would have to be drawn with different function that didn't introduce randomness)
+
 const canvas = document.getElementById('mainCanvas');
 const c = canvas.getContext('2d');
 
@@ -69,7 +74,6 @@ treeTaperSlider.addEventListener('change', setTreeTaper);
 treeBranchAngleVarSlider.addEventListener('change', setTreeBranchAngleVariation);
 treeBranchLengthVarSlider.addEventListener('change', setTreeBranchLengthVariation);
 
-
 // Grass controls
 const grassMaxHeightSlider = document.getElementById('grassMaxHeight');
 const grassMaxHeightDisp = document.getElementById('grassMaxHeightValue');
@@ -89,20 +93,26 @@ grassAngleSlider.min = 0;
 grassAngleSlider.max = 45;
 grassAngleSlider.defaultValue = grass.angle;
 grassAngleDisp.innerHTML = grassAngleSlider.value;
-const resetButton = document.getElementById('formReset');
+// const resetButton = document.getElementById('formReset');
 
 // Grass listeners
 grassMaxHeightSlider.addEventListener('change', setGrassMaxHeight);
 grassHeightVarSlider.addEventListener('change', setGrassHeightVar);
 grassAngleSlider.addEventListener('change', setGrassAngle);
-resetButton.addEventListener('onclick', drawScene(tree, grass));
+// resetButton.addEventListener('onclick', drawScene(tree, grass));
 
+drawScene(tree, grass);
 
 // Functions
 function drawScene(tree, grass) {
   c.clearRect(0, 0, canvas.width, canvas.height);
   drawTree(tree);
   drawGrass(grass);
+}
+
+function drawButtonPressed() {
+  console.log("draw");
+  drawScene(tree, grass);
 }
 
 function setTreeTrunkHeight() {
