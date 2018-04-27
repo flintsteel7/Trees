@@ -9,12 +9,13 @@ let tree = {
   "taper": 15,
   "branch_lev": 13,
   "branch_angle_var": 10,
+  "branch_length_var": 5,
 };
 
 let grass = {
   "max_height": 40,
   "height_var": 33,
-  "angle": -5,
+  "angle": 5,
   "colors": ['#1f7a1f', '#29a329', '#33cc33', '#5cd65c', '#85e085'],
 };
 
@@ -27,32 +28,39 @@ const treeTrunkHeightSlider = document.getElementById('treeTrunkHeight');
 const treeTrunkHeightDisp = document.getElementById('treeTrunkHeightValue');
 treeTrunkHeightSlider.min = 1;
 treeTrunkHeightSlider.max = canvas.height;
-treeTrunkHeightSlider.defaultValue = Math.round(canvas.height * 0.4);
+treeTrunkHeightSlider.defaultValue = Math.round(canvas.height * 0.35);
 treeTrunkHeightDisp.innerHTML = treeTrunkHeightSlider.value;
 const treeTrunkWidthSlider = document.getElementById('treeTrunkWidth');
 const treeTrunkWidthDisp = document.getElementById('treeTrunkWidthValue');
 treeTrunkWidthSlider.min = 1;
 treeTrunkWidthSlider.max = 150;
-treeTrunkWidthSlider.defaultValue = 40;
+treeTrunkWidthSlider.defaultValue = tree.width;
 treeTrunkWidthDisp.innerHTML = treeTrunkWidthSlider.value;
 const treeTaperSlider = document.getElementById('treeTaper');
 const treeTaperDisp = document.getElementById('treeTaperValue');
 treeTaperSlider.min = 1;
 treeTaperSlider.max = tree.width - 1;
-treeTaperSlider.defaultValue = 15;
+treeTaperSlider.defaultValue = tree.taper;
 treeTaperDisp.innerHTML = treeTaperSlider.value;
 const treeBranchAngleVarSlider = document.getElementById('treeBranchAngleVariation');
 const treeBranchAngleVarDisp = document.getElementById('treeBranchAngleVariationValue');
 treeBranchAngleVarSlider.min = 0;
-treeBranchAngleVarSlider.max = 50;
-treeBranchAngleVarSlider.defaultValue = 10;
+treeBranchAngleVarSlider.max = 30;
+treeBranchAngleVarSlider.defaultValue = tree.branch_angle_var;
 treeBranchAngleVarDisp.innerHTML = treeBranchAngleVarSlider.value;
+const treeBranchLengthVarSlider = document.getElementById('treeBranchLengthVariation');
+const treeBranchLengthVarDisp = document.getElementById('treeBranchLengthVariationValue');
+treeBranchLengthVarSlider.min = 0;
+treeBranchLengthVarSlider.max = 20;
+treeBranchLengthVarSlider.defaultValue = tree.branch_length_var;
+treeBranchLengthVarDisp.innerHTML = treeBranchLengthVarSlider.value;
 
 // Tree listeners
 treeTrunkHeightSlider.addEventListener('mouseup', setTreeTrunkHeight);
 treeTrunkWidthSlider.addEventListener('mouseup', setTreeTrunkWidth);
 treeTaperSlider.addEventListener('mouseup', setTreeTaper);
 treeBranchAngleVarSlider.addEventListener('mouseup', setTreeBranchAngleVariation);
+treeBranchLengthVarSlider.addEventListener('mouseup', setTreeBranchLengthVariation);
 
 
 // Grass controls
@@ -60,19 +68,19 @@ const grassMaxHeightSlider = document.getElementById('grassMaxHeight');
 const grassMaxHeightDisp = document.getElementById('grassMaxHeightValue');
 grassMaxHeightSlider.min = 1;
 grassMaxHeightSlider.max = canvas.height;
-grassMaxHeightSlider.defaultValue = 40;
+grassMaxHeightSlider.defaultValue = grass.max_height;
 grassMaxHeightDisp.innerHTML = grassMaxHeightSlider.value;
 const grassHeightVarSlider = document.getElementById('grassHeightVar');
 const grassHeightVarDisp = document.getElementById('grassHeightVarValue');
 grassHeightVarSlider.min = 0;
 grassHeightVarSlider.max = 40;
-grassHeightVarSlider.defaultValue = 33;
+grassHeightVarSlider.defaultValue = grass.height_var;
 grassHeightVarDisp.innerHTML = grassHeightVarSlider.value;
 const grassAngleSlider = document.getElementById('grassAngle');
 const grassAngleDisp = document.getElementById('grassAngleValue');
 grassAngleSlider.min = 0;
 grassAngleSlider.max = 45;
-grassAngleSlider.defaultValue = 5;
+grassAngleSlider.defaultValue = grass.angle;
 grassAngleDisp.innerHTML = grassAngleSlider.value;
 const resetButton = document.getElementById('formReset');
 
@@ -120,6 +128,12 @@ function setTreeBranchAngleVariation() {
   drawScene(tree, grass);
 }
 
+function setTreeBranchLengthVariation() {
+  tree.branch_length_var = parseInt(treeBranchLengthVarSlider.value);
+  treeBranchLengthVarDisp.innerHTML = treeBranchLengthVarSlider.value;
+  drawScene(tree, grass);
+}
+
 function setGrassMaxHeight() {
   grass.max_height = parseInt(grassMaxHeightSlider.value);
   grassMaxHeightDisp.innerHTML = grassMaxHeightSlider.value;
@@ -163,11 +177,23 @@ function calcAngleRandomness(variable) {
   return (variable * Math.random() * 0.05) * posOrNeg;
 }
 
-function drawTree(tree_params) {
-  drawTrunk(tree_params.height, tree_params.width, tree_params.width - tree_params.taper, tree_params.branch_lev, tree_params.branch_angle_var);
+function calcLengthRandomness(variable) {
+  const posOrNeg = Math.round(Math.random()) * 2 - 1; // produces 1 or -1
+  return (variable * Math.random() * 3) * posOrNeg;
 }
 
-function drawTrunk(height, base_width, end_width, branch_lev, branch_angle_var, position = (canvas.width / 2)) {
+function drawTree(tree_params) {
+  drawTrunk(
+    tree_params.height,
+    tree_params.width,
+    tree_params.width - tree_params.taper,
+    tree_params.branch_lev,
+    tree_params.branch_angle_var,
+    tree_params.branch_length_var
+  );
+}
+
+function drawTrunk(height, base_width, end_width, branch_lev, branch_angle_var, branch_length_var, position = (canvas.width / 2)) {
   c.beginPath();
   c.moveTo(position - (base_width / 2), canvas.height);
   c.lineTo(position - (end_width / 2), canvas.height - height);
@@ -179,14 +205,30 @@ function drawTrunk(height, base_width, end_width, branch_lev, branch_angle_var, 
   drawBranch({
     x: position,
     y: canvas.height - height
-  }, height * 0.6, end_width, ((end_width * end_width) / base_width), (Math.PI / 4 + calcAngleRandomness(branch_angle_var)), branch_lev, branch_angle_var);
+    },
+    height * 0.6 + calcLengthRandomness(branch_length_var),
+    end_width,
+    ((end_width * end_width) / base_width),
+    (Math.PI / 4 + calcAngleRandomness(branch_angle_var)),
+    branch_lev,
+    branch_angle_var,
+    branch_length_var
+  );
   drawBranch({
     x: position,
     y: canvas.height - height
-  }, height * 0.6, end_width, ((end_width * end_width) / base_width), ((3 * Math.PI) / 4 + calcAngleRandomness(branch_angle_var)), branch_lev, branch_angle_var);
+    },
+    height * 0.6 + calcLengthRandomness(branch_length_var),
+    end_width,
+    ((end_width * end_width) / base_width),
+    ((3 * Math.PI) / 4 + calcAngleRandomness(branch_angle_var)),
+    branch_lev,
+    branch_angle_var,
+    branch_length_var
+  );
 }
 
-function drawBranch(start, length, base_width, end_width, angle, branch_lev, branch_angle_var) {
+function drawBranch(start, length, base_width, end_width, angle, branch_lev, branch_angle_var, branch_length_var) {
   if (branch_lev > 0) {
     const end = {
       x: start.x + (length * Math.cos(angle)),
@@ -208,8 +250,26 @@ function drawBranch(start, length, base_width, end_width, angle, branch_lev, bra
     c.fill();
     c.closePath();
     if ((branch_lev - 1) > 0) {
-      drawBranch(end, length * 0.6, end_width, ((end_width * end_width) / base_width), angle - (Math.PI / 4 + calcAngleRandomness(branch_angle_var)), branch_lev - 1, branch_angle_var);
-      drawBranch(end, length * 0.6, end_width, ((end_width * end_width) / base_width), angle + (Math.PI / 4 + calcAngleRandomness(branch_angle_var)), branch_lev - 1, branch_angle_var);
+      drawBranch(
+        end,
+        length * 0.6 + calcLengthRandomness(branch_length_var),
+        end_width,
+        ((end_width * end_width) / base_width),
+        angle - (Math.PI / 4 + calcAngleRandomness(branch_angle_var)),
+        branch_lev - 1,
+        branch_angle_var,
+        branch_length_var
+      );
+      drawBranch(
+        end,
+        length * 0.6 + calcLengthRandomness(branch_length_var),
+        end_width,
+        ((end_width * end_width) / base_width),
+        angle + (Math.PI / 4 + calcAngleRandomness(branch_angle_var)),
+        branch_lev - 1,
+        branch_angle_var,
+        branch_length_var
+      );
     }
   }
 }
