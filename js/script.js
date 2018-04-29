@@ -37,7 +37,7 @@ treeTrunkHeightSlider.defaultValue = tree.height;
 treeTrunkHeightDisp.innerHTML = treeTrunkHeightSlider.value;
 const treeTrunkWidthSlider = document.getElementById('treeTrunkWidth');
 const treeTrunkWidthDisp = document.getElementById('treeTrunkWidthValue');
-treeTrunkWidthSlider.min = 1;
+treeTrunkWidthSlider.min = 2;
 treeTrunkWidthSlider.max = 150;
 treeTrunkWidthSlider.defaultValue = tree.width;
 treeTrunkWidthDisp.innerHTML = treeTrunkWidthSlider.value;
@@ -50,7 +50,7 @@ treeTaperDisp.innerHTML = treeTaperSlider.value;
 const treeNumBranchSlider = document.getElementById('treeNumBranch');
 const treeNumBranchDisp = document.getElementById('treeNumBranchValue');
 treeNumBranchSlider.min = 0;
-treeNumBranchSlider.max = 18;
+treeNumBranchSlider.max = 16;
 treeNumBranchSlider.defaultValue = tree.branch_lev;
 treeNumBranchDisp.innerHTML = treeNumBranchSlider.value;
 const treeBranchAngleVarSlider = document.getElementById('treeBranchAngleVariation');
@@ -125,6 +125,11 @@ function setTreeTrunkWidth() {
   tree.width = parseInt(treeTrunkWidthSlider.value);
   treeTrunkWidthDisp.innerHTML = treeTrunkWidthSlider.value;
   treeTaperSlider.max = treeTrunkWidthSlider.value - 1;
+  if (tree.taper >= tree.width - 1) {
+    treeTaperSlider.value = treeTaperSlider.max
+    treeTaperDisp.innerText = treeTaperSlider.value
+    tree.taper = treeTaperSlider.max
+  }
   drawScene(tree, grass);
 }
 
