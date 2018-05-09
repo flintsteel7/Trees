@@ -93,13 +93,11 @@ grassAngleSlider.min = 0;
 grassAngleSlider.max = 45;
 grassAngleSlider.defaultValue = grass.angle;
 grassAngleDisp.innerHTML = grassAngleSlider.value;
-// const resetButton = document.getElementById('formReset');
 
 // Grass listeners
 grassMaxHeightSlider.addEventListener('change', setGrassMaxHeight);
 grassHeightVarSlider.addEventListener('change', setGrassHeightVar);
 grassAngleSlider.addEventListener('change', setGrassAngle);
-// resetButton.addEventListener('onclick', drawScene(tree, grass));
 
 drawScene(tree, grass);
 
@@ -185,15 +183,15 @@ function setGrassAngle() {
   drawScene(tree, grass)
 }
 
-function drawGrass(grass_params) {
+function drawGrass({angle, max_height, height_var, colors}) {
   for (let i = 0; i < canvas.width; i++) {
     c.beginPath();
     c.moveTo(i, canvas.height);
     c.lineTo(
-      getRandInt(i - grass_params.angle, i + grass_params.angle),
-      getRandInt(canvas.height - grass_params.max_height, canvas.height - (grass_params.max_height - grass_params.height_var))
+      getRandInt(i - angle, i + angle),
+      getRandInt(canvas.height - max_height, canvas.height - (max_height - height_var))
     );
-    c.strokeStyle = grass_params.colors[getRandInt(0, grass_params.colors.length - 1)];
+    c.strokeStyle = colors[getRandInt(0, colors.length - 1)];
     c.stroke();
     c.closePath();
   }
@@ -215,16 +213,16 @@ function calcLengthRandomness(variable) {
 
 function drawTree(tree_params) {
   drawTrunk(
-    tree_params.height,
-    tree_params.width,
-    tree_params.width - tree_params.taper,
-    tree_params.branch_lev,
-    tree_params.branch_angle_var,
-    tree_params.branch_length_var
+    {
+      ...tree_params,
+      base_width: tree_params.width,
+      end_width: tree_params.width - tree_params.taper,
+    },
+    (canvas.width / 2)
   );
 }
 
-function drawTrunk(height, base_width, end_width, branch_lev, branch_angle_var, branch_length_var, position = (canvas.width / 2)) {
+function drawTrunk({height, base_width, end_width, branch_lev, branch_angle_var, branch_length_var}, position) {
   c.beginPath();
   c.moveTo(position - (base_width / 2), canvas.height);
   c.lineTo(position - (end_width / 2), canvas.height - height);
