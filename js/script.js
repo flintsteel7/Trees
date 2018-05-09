@@ -105,7 +105,7 @@ drawScene(tree, grass);
 function drawScene(tree, grass) {
   c.clearRect(0, 0, canvas.width, canvas.height);
   drawTree(tree);
-  drawGrass(grass);
+  drawGrass(calcGrass(grass, canvas.height, canvas.width));
 }
 
 function drawButtonPressed() {
@@ -183,18 +183,37 @@ function setGrassAngle() {
   drawScene(tree, grass)
 }
 
-function drawGrass({angle, max_height, height_var, colors}) {
-  for (let i = 0; i < canvas.width; i++) {
+function drawGrass(lawn) {
+  for (const blade of lawn) {
     c.beginPath();
-    c.moveTo(i, canvas.height);
+    c.moveTo(blade.root.x, blade.root.y);
     c.lineTo(
-      getRandInt(i - angle, i + angle),
-      getRandInt(canvas.height - max_height, canvas.height - (max_height - height_var))
+      blade.tip.x,
+      blade.tip.y
     );
-    c.strokeStyle = colors[getRandInt(0, colors.length - 1)];
+    c.strokeStyle = blade.color;
     c.stroke();
     c.closePath();
   }
+}
+
+function calcGrass({angle, max_height, height_var, colors}, ground_level, lawn_width) {
+  const lawn = [];
+  for (let i = 0; i < lawn_width; i++) {
+    const blade = {
+      root: {
+        x: i,
+        y: ground_level,
+      },
+      tip: {
+        x: getRandInt(i - angle, i + angle),
+        y: getRandInt(ground_level - max_height, ground_level - (max_height - height_var)),
+      },
+      color: colors[getRandInt(0, colors.length - 1)],
+    };
+    lawn.push(blade);
+  }
+  return lawn
 }
 
 function getRandInt(min, max) {
