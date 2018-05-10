@@ -124,9 +124,9 @@ function setTreeTrunkWidth() {
   treeTrunkWidthDisp.innerHTML = treeTrunkWidthSlider.value;
   treeTaperSlider.max = treeTrunkWidthSlider.value - 1;
   if (tree.taper >= tree.width - 1) {
-    treeTaperSlider.value = treeTaperSlider.max
-    treeTaperDisp.innerText = treeTaperSlider.value
-    tree.taper = treeTaperSlider.max
+    treeTaperSlider.value = treeTaperSlider.max;
+    treeTaperDisp.innerText = treeTaperSlider.value;
+    tree.taper = treeTaperSlider.max;
   }
   drawScene(tree, grass);
 }
@@ -274,6 +274,29 @@ function drawTrunk({height, base_width, end_width, branch_lev, branch_angle_var,
     branch_angle_var,
     branch_length_var
   );
+}
+
+function calcTrunk({width, height, taper}, tree_position, ground_level) {
+  const half_base = width / 2;
+  const half_end = (width - taper) / 2;
+  return [
+    {
+      x: tree_position - half_base,
+      y: ground_level,
+    },
+    {
+      x: tree_position - half_end,
+      y: ground_level - height,
+    },
+    {
+      x: tree_position + half_end,
+      y: ground_level - height,
+    },
+    {
+      x: tree_position + half_base,
+      y: ground_level,
+    },
+  ]
 }
 
 function drawBranch(start, length, base_width, end_width, angle, branch_lev, branch_angle_var, branch_length_var) {
