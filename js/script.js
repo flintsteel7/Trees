@@ -231,6 +231,8 @@ function calcLengthRandomness(variable) {
 }
 
 function drawTree(tree_params) {
+  const tree_trunk = calcTrunk({...tree_params}, canvas.width / 3, canvas.height);
+  drawTrunkOrBranch(tree_trunk)
   drawTrunk(
     {
       ...tree_params,
@@ -239,6 +241,18 @@ function drawTree(tree_params) {
     },
     (canvas.width / 2)
   );
+}
+
+function drawTrunkOrBranch(coord_arr) {
+  const t = coord_arr;
+  c.beginPath();
+  c.moveTo(t[0].x, t[0].y);
+  for (let i = 1; i < t.length; i++) {
+    c.lineTo(t[i].x, t[i].y);
+  }
+  c.fillStyle = '#3B2112';
+  c.fill();
+  c.closePath();
 }
 
 function drawTrunk({height, base_width, end_width, branch_lev, branch_angle_var, branch_length_var}, position) {
