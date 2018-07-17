@@ -1,4 +1,4 @@
-const calcRandomness = require('./utilities');
+import calcRandomness from './utilities';
 
 function calcTree(tree_params) {
   const this_tree = [];
@@ -67,4 +67,4 @@ function calcTrunk({position, width, length, taper}) {
   }
 }
 
-module.exports = calcTree;
+export default calcTree;

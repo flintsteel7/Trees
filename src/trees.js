@@ -1,9 +1,10 @@
-"use strict";
+import calcTree from './lib/calculate-tree'
 
 // TODO
 // add ability to save any particular tree
    // (draw functions would have to create an object or array of numbers generated)
    // (saved array of numbers would have to be drawn with different function that didn't introduce randomness)
+// reduce global variables
 
 const canvas = document.getElementById('mainCanvas');
 const c = canvas.getContext('2d');
@@ -31,8 +32,6 @@ let grass = {
   angle: 5,
   colors: ['#1f7a1f', '#29a329', '#33cc33', '#5cd65c', '#85e085'],
 };
-
-const calcTree = require('./lib/calculate-tree');
 
 // Tree controls
 const treeTrunkHeightSlider = document.getElementById('treeTrunkHeight');
@@ -71,6 +70,9 @@ treeBranchLengthVarSlider.min = 0;
 treeBranchLengthVarSlider.max = 25;
 treeBranchLengthVarSlider.defaultValue = tree.length_var;
 treeBranchLengthVarDisp.innerHTML = treeBranchLengthVarSlider.value;
+const controlForm = document.getElementById('treeControlForm');
+const drawButton = document.getElementById('drawButton');
+const resetButton = document.getElementById('resetButton');
 
 // Tree listeners
 treeTrunkHeightSlider.addEventListener('change', setTreeTrunkHeight);
@@ -79,6 +81,21 @@ treeNumBranchSlider.addEventListener('change', setTreeNumBranch);
 treeTaperSlider.addEventListener('change', setTreeTaper);
 treeBranchAngleVarSlider.addEventListener('change', setTreeBranchAngleVariation);
 treeBranchLengthVarSlider.addEventListener('change', setTreeBranchLengthVariation);
+drawButton.addEventListener('click', drawButtonPressed);
+// TODO improve this reset portion (probably will include making tree non-global)
+resetButton.addEventListener('click', () => {
+  controlForm.reset();
+  setGrassAngle();
+  setGrassHeightVar();
+  setGrassMaxHeight();
+  setTreeBranchAngleVariation();
+  setTreeBranchLengthVariation();
+  setTreeNumBranch();
+  setTreeTaper();
+  setTreeTrunkHeight();
+  setTreeTrunkWidth();
+  drawButtonPressed();
+});
 
 // Grass controls
 const grassMaxHeightSlider = document.getElementById('grassMaxHeight');

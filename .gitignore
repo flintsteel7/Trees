@@ -48,3 +48,5 @@ fabric.properties
 node_modules/
 
 .vscode
+
+dist/trees.js
