@@ -32,6 +32,8 @@ let grass = {
   colors: ['#1f7a1f', '#29a329', '#33cc33', '#5cd65c', '#85e085'],
 };
 
+const calcTree = require('./lib/calculate-tree');
+
 // Tree controls
 const treeTrunkHeightSlider = document.getElementById('treeTrunkHeight');
 const treeTrunkHeightDisp = document.getElementById('treeTrunkHeightValue');
@@ -233,23 +235,6 @@ function calcLengthRandomness(variable) {
   return (variable * Math.random() * 3) * posOrNeg;
 }
 
-function calcRandomness(variable, factor) {
-  const posOrNeg = Math.round(Math.random()) * 2 - 1; // produces 1 or -1
-  return (variable * Math.random() * factor) * posOrNeg;
-}
-
-function calcTree(tree_params) {
-  const this_tree = [];
-  const trunk = calcTrunk({...tree_params});
-  this_tree.push(trunk.coords);
-  const branches = calcBranches({
-    start: trunk.fork,
-    parent_angle: Math.PI / 2,
-    ...tree_params,
-  });
-  return this_tree;
-}
-
 function drawTree(tree_data) {
   tree_data.forEach(set_of_coords => {
     drawTrunkOrBranch(set_of_coords);
@@ -315,60 +300,6 @@ function drawTrunk({length, base_width, end_width, branch_lev, angle_var, length
     angle_var,
     length_var
   );
-}
-
-function calcBranches({start, width, taper, length, parent_angle, length_var, angle_var, branch_lev}) {
-  const branches = [];
-  const params = {
-    start,
-    base_width: width,
-    end_width: width - taper,
-  };
-  branches.push(calcBranch({
-    ...params,
-    length: length * 0.6 + calcRandomness(length_var, 3),
-    angle: parent_angle + (Math.PI / 4 + calcRandomness(angle_var, 0.05)),
-  }));
-  branches.push(calcBranch({
-    ...params,
-    length: length * 0.6 + calcRandomness(length_var, 3),
-    angle: parent_angle - (Math.PI / 4 + calcRandomness(angle_var, 0.05)),
-  }));
-}
-
-function calcBranch({start, base_width, end_width, length, angle}) {
-  const half_base = base_width / 2;
-  const half_end = end_width / 2;
-  const fork = {
-    x: start.x + (length * Math.cos(angle)),
-    y: start.y - (length * Math.sin(angle)),
-  };
-}
-
-function calcTrunk({position, width, length, taper}) {
-  const half_base = width / 2;
-  const half_end = (width - taper) / 2;
-  return {
-    fork: {x: position.x, y: position.y - length},
-    coords: [
-      {
-        x: position.x - half_base,
-        y: position.y,
-      },
-      {
-        x: position.x - half_end,
-        y: position.y - length,
-      },
-      {
-        x: position.x + half_end,
-        y: position.y - length,
-      },
-      {
-        x: position.x + half_base,
-        y: position.y,
-      },
-    ],
-  }
 }
 
 function drawBranch(start, length, base_width, end_width, angle, branch_lev, angle_var, length_var) {
