@@ -4,9 +4,7 @@
   "description": "2D tree generator using HTML Canvas and JavaScript",
   "main": "app.js",
   "dependencies": {},
-  "devDependencies": {
-    "express": "^4.15.3"
-  },
+  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
