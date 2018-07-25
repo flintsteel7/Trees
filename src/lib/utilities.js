@@ -3,4 +3,8 @@ function calcRandomness(variable, factor) {
   return (variable * Math.random() * factor) * posOrNeg;
 }
 
-module.exports = calcRandomness;
+function getRandInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+export {calcRandomness, getRandInt};

@@ -1,4 +1,4 @@
-import calcRandomness from './utilities';
+import {calcRandomness} from './utilities';
 
 function calcTree(tree_params) {
   const this_tree = [];

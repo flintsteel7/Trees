@@ -1,4 +1,5 @@
 import calcTree from './lib/calculate-tree'
+import calcGrass from './lib/calculate-grass';
 
 // TODO
 // add ability to save any particular tree
@@ -217,29 +218,6 @@ function drawGrass(lawn) {
     c.stroke();
     c.closePath();
   }
-}
-
-function calcGrass({angle, max_height, height_var, colors}, ground_level, lawn_width) {
-  const lawn = [];
-  for (let i = 0; i < lawn_width; i++) {
-    const blade = {
-      root: {
-        x: i,
-        y: ground_level,
-      },
-      tip: {
-        x: getRandInt(i - angle, i + angle),
-        y: getRandInt(ground_level - max_height, ground_level - (max_height - height_var)),
-      },
-      color: colors[getRandInt(0, colors.length - 1)],
-    };
-    lawn.push(blade);
-  }
-  return lawn
-}
-
-function getRandInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 function calcAngleRandomness(variable) {
