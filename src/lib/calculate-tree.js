@@ -39,6 +39,9 @@ function calcBranch({start, base_width, end_width, length, angle}) {
     x: start.x + (length * Math.cos(angle)),
     y: start.y - (length * Math.sin(angle)),
   };
+  // TODO calculate coordinates
+  const coords = [];
+  return {fork, coords}
 }
 
 function calcTrunk({position, width, length, taper}) {
