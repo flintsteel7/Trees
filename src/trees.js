@@ -3,9 +3,10 @@ import calcGrass from './lib/calculate-grass';
 
 // TODO
 // add ability to save any particular tree
-   // (draw functions would have to create an object or array of numbers generated)
-   // (saved array of numbers would have to be drawn with different function that didn't introduce randomness)
+    // download and upload tree files?
 // reduce global variables
+// leaves?
+// use CSS grid for layout?
 
 const canvas = document.getElementById('mainCanvas');
 const c = canvas.getContext('2d');
@@ -246,7 +247,7 @@ function oldDrawTree(tree_params) {
       base_width: tree_params.width,
       end_width: tree_params.width - tree_params.taper,
     },
-    (canvas.width / 2)
+    (canvas.width / 3) * 2
   );
 }
 

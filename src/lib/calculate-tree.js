@@ -15,6 +15,10 @@ function calcTree(tree_params) {
 
 function calcBranches({start, width, taper, length, parent_angle, length_var, angle_var, branch_lev}) {
   const branches = [];
+  // TODO
+  // loop until branch_lev is reached
+  // new params for each branch level based on the last
+
   const params = {
     start,
     base_width: width - taper,
