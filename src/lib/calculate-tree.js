@@ -9,31 +9,52 @@ function calcTree(tree_params) {
     parent_angle: Math.PI / 2,
     ...tree_params,
   }));
-  console.log(branching_tree)
+  console.log(branching_tree);
   return branching_tree;
+}
+
+function genParams({fork, base_width, end_width, length, angle}, length_var, angle_var) {
+  return [
+    {
+      start: fork,
+      base_width: end_width,
+      end_width: (end_width * end_width) / base_width,
+      length: length * 0.6 + calcRandomness(length_var, 3),
+      angle: angle + (Math.PI / 4 + calcRandomness(angle_var, 0.05))
+    },
+    {
+      start: fork,
+      base_width: end_width,
+      end_width: (end_width * end_width) / base_width,
+      length: length * 0.6 + calcRandomness(length_var, 3),
+      angle: angle - (Math.PI / 4 + calcRandomness(angle_var, 0.05))
+    }
+  ]
 }
 
 function calcBranches({start, width, taper, length, parent_angle, length_var, angle_var, branch_lev}) {
   const branches = [];
-  // TODO
-  // loop until branch_lev is reached
-  // new params for each branch level based on the last
 
-  const params = {
-    start,
-    base_width: width - taper,
-    end_width: width - (2 * taper),
-  };
-  branches.push(calcBranch({
-    ...params,
-    length: length * 0.6 + calcRandomness(length_var, 3),
-    angle: parent_angle + (Math.PI / 4 + calcRandomness(angle_var, 0.05)),
-  }).coords);
-  branches.push(calcBranch({
-    ...params,
-    length: length * 0.6 + calcRandomness(length_var, 3),
-    angle: parent_angle - (Math.PI / 4 + calcRandomness(angle_var, 0.05)),
-  }).coords);
+  let set_params = genParams({
+      fork: start,
+      base_width: width,
+      end_width: width - taper,
+      length,
+      angle: parent_angle
+    },
+    length_var,
+    angle_var
+    );
+
+  for (let i = 0; i < branch_lev; i++) {
+    let current_params = [];
+    for (const params of set_params) {
+      const result = calcBranch({...params});
+      current_params.push(result.params);
+      branches.push(result.coords);
+    }
+    set_params = current_params.reduce((acc, params) => acc.concat(genParams({...params}, length_var, angle_var)), []);
+  }
   return branches;
 }
 
@@ -46,7 +67,13 @@ function calcBranch({start, base_width, end_width, length, angle}) {
   const half_end = end_width / 2;
   const angle90 = (Math.PI / 2);
   return {
-    fork: end,
+    params: {
+      fork: end,
+      base_width,
+      end_width,
+      length,
+      angle
+    },
     coords: [
       {
         x: start.x + (half_base * Math.cos(angle + angle90)),

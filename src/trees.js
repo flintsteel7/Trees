@@ -7,6 +7,7 @@ import calcGrass from './lib/calculate-grass';
 // reduce global variables
 // leaves?
 // use CSS grid for layout?
+// add zoom functionality?
 
 const canvas = document.getElementById('mainCanvas');
 const c = canvas.getContext('2d');
