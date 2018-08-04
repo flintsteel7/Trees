@@ -1,4 +1,4 @@
-import {calcRandomness} from './utilities';
+import {calcRandomness, toHundredths} from './utilities';
 
 function calcTree(tree_params) {
   const this_tree = [];
@@ -53,15 +53,20 @@ function calcBranches({start, width, taper, length, parent_angle, length_var, an
       current_params.push(result.params);
       branches.push(result.coords);
     }
-    set_params = current_params.reduce((acc, params) => acc.concat(genParams({...params}, length_var, angle_var)), []);
+    if (i < branch_lev - 1) {
+      set_params = current_params.reduce((acc, params) => acc.concat(genParams({...params}, length_var, angle_var)), []);
+    } else {
+      const leaf_coords = current_params.map(params => params.fork);
+      console.log(leaf_coords)
+    }
   }
   return branches;
 }
 
 function calcBranch({start, base_width, end_width, length, angle}) {
   const end = {
-    x: start.x + (length * Math.cos(angle)),
-    y: start.y - (length * Math.sin(angle))
+    x: toHundredths(start.x + (length * Math.cos(angle))),
+    y: toHundredths(start.y - (length * Math.sin(angle)))
   };
   const half_base = base_width / 2;
   const half_end = end_width / 2;
@@ -76,20 +81,20 @@ function calcBranch({start, base_width, end_width, length, angle}) {
     },
     coords: [
       {
-        x: start.x + (half_base * Math.cos(angle + angle90)),
-        y: start.y - (half_base * Math.sin(angle + angle90))
+        x: toHundredths(start.x + (half_base * Math.cos(angle + angle90))),
+        y: toHundredths(start.y - (half_base * Math.sin(angle + angle90)))
       },
       {
-        x: end.x + (half_end * Math.cos(angle + angle90)),
-        y: end.y - (half_end * Math.sin(angle + angle90))
+        x: toHundredths(end.x + (half_end * Math.cos(angle + angle90))),
+        y: toHundredths(end.y - (half_end * Math.sin(angle + angle90)))
       },
       {
-        x: end.x + (half_end * Math.cos(angle - angle90)),
-        y: end.y - (half_end * Math.sin(angle - angle90))
+        x: toHundredths(end.x + (half_end * Math.cos(angle - angle90))),
+        y: toHundredths(end.y - (half_end * Math.sin(angle - angle90)))
       },
       {
-        x: start.x + (half_base * Math.cos(angle - angle90)),
-        y: start.y - (half_base * Math.sin(angle - angle90))
+        x: toHundredths(start.x + (half_base * Math.cos(angle - angle90))),
+        y: toHundredths(start.y - (half_base * Math.sin(angle - angle90)))
       }
     ]
   };

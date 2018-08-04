@@ -7,4 +7,8 @@ function getRandInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-export {calcRandomness, getRandInt};
+function toHundredths(num) {
+  return Math.round(num * 100) / 100
+}
+
+export {calcRandomness, getRandInt, toHundredths};
