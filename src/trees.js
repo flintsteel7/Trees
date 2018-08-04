@@ -3,8 +3,10 @@ import calcGrass from './lib/calculate-grass';
 
 // TODO
 // add ability to save any particular tree
-    // download and upload tree files?
-// reduce global variables
+  // download and upload tree files?
+// improve user experience
+  // better control layout
+  // wait symbol while calculating?
 // leaves?
 // use CSS grid for layout?
 // add zoom functionality?
@@ -85,18 +87,9 @@ treeTaperSlider.addEventListener('change', setTreeTaper);
 treeBranchAngleVarSlider.addEventListener('change', setTreeBranchAngleVariation);
 treeBranchLengthVarSlider.addEventListener('change', setTreeBranchLengthVariation);
 drawButton.addEventListener('click', drawButtonPressed);
-// TODO improve this reset portion (probably will include making tree non-global)
+// TODO make this work (might include making tree non-global)
 resetButton.addEventListener('click', () => {
   controlForm.reset();
-  setGrassAngle();
-  setGrassHeightVar();
-  setGrassMaxHeight();
-  setTreeBranchAngleVariation();
-  setTreeBranchLengthVariation();
-  setTreeNumBranch();
-  setTreeTaper();
-  setTreeTrunkHeight();
-  setTreeTrunkWidth();
   drawButtonPressed();
 });
 
