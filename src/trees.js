@@ -18,7 +18,7 @@ canvas.height = window.innerHeight;
 
 let tree = {
   position: {
-    x: canvas.width / 3,
+    x: canvas.width / 2,
     y: canvas.height,
   },
   length: 300,
@@ -130,7 +130,7 @@ drawScene(tree, grass);
 // Functions
 function drawScene(tree, grass) {
   c.clearRect(0, 0, canvas.width, canvas.height);
-  oldDrawTree(tree);
+  drawTree(calcTree(tree));
   drawGrass(calcGrass(grass, canvas.height, canvas.width));
 }
 
@@ -222,34 +222,10 @@ function drawGrass(lawn) {
   }
 }
 
-function calcAngleRandomness(variable) {
-  const posOrNeg = Math.round(Math.random()) * 2 - 1; // produces 1 or -1
-  return (variable * Math.random() * 0.05) * posOrNeg;
-}
-
-function calcLengthRandomness(variable) {
-  const posOrNeg = Math.round(Math.random()) * 2 - 1; // produces 1 or -1
-  return (variable * Math.random() * 3) * posOrNeg;
-}
-
 function drawTree(tree_data) {
   tree_data.forEach(set_of_coords => {
     drawTrunkOrBranch(set_of_coords);
   });
-}
-
-// Temporary
-drawTree(calcTree(tree));
-
-function oldDrawTree(tree_params) {
-  drawTrunk(
-    {
-      ...tree_params,
-      base_width: tree_params.width,
-      end_width: tree_params.width - tree_params.taper,
-    },
-    (canvas.width / 3) * 2
-  );
 }
 
 function drawTrunkOrBranch(coord_arr) {
@@ -262,85 +238,4 @@ function drawTrunkOrBranch(coord_arr) {
   c.fillStyle = '#3B2112';
   c.fill();
   c.closePath();
-}
-
-function drawTrunk({length, base_width, end_width, branch_lev, angle_var, length_var}, position) {
-  c.beginPath();
-  c.moveTo(position - (base_width / 2), canvas.height);
-  c.lineTo(position - (end_width / 2), canvas.height - length);
-  c.lineTo(position + (end_width / 2), canvas.height - length);
-  c.lineTo(position + (base_width / 2), canvas.height);
-  c.fillStyle = '#3B2112';
-  c.fill();
-  c.closePath();
-  drawBranch({
-    x: position,
-    y: canvas.height - length
-    },
-    length * 0.6 + calcLengthRandomness(length_var),
-    end_width,
-    ((end_width * end_width) / base_width),
-    (Math.PI / 4 + calcAngleRandomness(angle_var)),
-    branch_lev,
-    angle_var,
-    length_var
-  );
-  drawBranch({
-    x: position,
-    y: canvas.height - length
-    },
-    length * 0.6 + calcLengthRandomness(length_var),
-    end_width,
-    ((end_width * end_width) / base_width),
-    ((3 * Math.PI) / 4 + calcAngleRandomness(angle_var)),
-    branch_lev,
-    angle_var,
-    length_var
-  );
-}
-
-function drawBranch(start, length, base_width, end_width, angle, branch_lev, angle_var, length_var) {
-  if (branch_lev > 0) {
-    const end = {
-      x: start.x + (length * Math.cos(angle)),
-      y: start.y - (length * Math.sin(angle))
-    };
-    const half_base = (base_width / 2);
-    const half_end = (end_width / 2);
-    const angle90 = (Math.PI / 2);
-    c.beginPath();
-    c.moveTo(start.x + (half_base * Math.cos(angle + angle90)),
-      start.y - (half_base * Math.sin(angle + angle90)));
-    c.lineTo(end.x + (half_end * Math.cos(angle + angle90)),
-      end.y - (half_end * Math.sin(angle + angle90)));
-    c.lineTo(end.x + (half_end * Math.cos(angle - angle90)),
-      end.y - (half_end * Math.sin(angle - angle90)));
-    c.lineTo(start.x + (half_base * Math.cos(angle - angle90)),
-      start.y - (half_base * Math.sin(angle - angle90)));
-    c.fillStyle = '#3B2112';
-    c.fill();
-    c.closePath();
-    if ((branch_lev - 1) > 0) {
-      drawBranch(
-        end,
-        length * 0.6 + calcLengthRandomness(length_var),
-        end_width,
-        ((end_width * end_width) / base_width),
-        angle - (Math.PI / 4 + calcAngleRandomness(angle_var)),
-        branch_lev - 1,
-        angle_var,
-        length_var
-      );
-      drawBranch(
-        end,
-        length * 0.6 + calcLengthRandomness(length_var),
-        end_width,
-        ((end_width * end_width) / base_width),
-        angle + (Math.PI / 4 + calcAngleRandomness(angle_var)),
-        branch_lev - 1,
-        angle_var,
-        length_var
-      );
-    }
-  }
 }
