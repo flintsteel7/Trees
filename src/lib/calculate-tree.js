@@ -1,16 +1,17 @@
 import {calcRandomness, toHundredths} from './utilities';
 
 function calcTree(tree_params) {
-  const this_tree = [];
   const trunk = calcTrunk({...tree_params});
-  this_tree.push(trunk.coords);
-  const branching_tree = this_tree.concat(calcBranches({
+  const branch_results = calcBranches({
     start: trunk.fork,
     parent_angle: Math.PI / 2,
     ...tree_params,
-  }));
-  console.log(branching_tree);
-  return branching_tree;
+  });
+  return {
+    trunk: trunk.coords,
+    branches: branch_results.branches,
+    leaves: branch_results.leaves,
+  };
 }
 
 function genParams({fork, base_width, end_width, length, angle}, length_var, angle_var) {
@@ -34,6 +35,7 @@ function genParams({fork, base_width, end_width, length, angle}, length_var, ang
 
 function calcBranches({start, width, taper, length, parent_angle, length_var, angle_var, branch_lev}) {
   const branches = [];
+  let leaves;
 
   let set_params = genParams({
       fork: start,
@@ -56,11 +58,13 @@ function calcBranches({start, width, taper, length, parent_angle, length_var, an
     if (i < branch_lev - 1) {
       set_params = current_params.reduce((acc, params) => acc.concat(genParams({...params}, length_var, angle_var)), []);
     } else {
-      const leaf_coords = current_params.map(params => params.fork);
-      console.log(leaf_coords)
+      leaves = current_params.map(params => params.fork);
     }
   }
-  return branches;
+  return {
+    branches,
+    leaves,
+  };
 }
 
 function calcBranch({start, base_width, end_width, length, angle}) {

@@ -216,9 +216,13 @@ function drawGrass(lawn) {
 }
 
 function drawTree(tree_data) {
-  tree_data.forEach(set_of_coords => {
+  const coords = [tree_data.trunk].concat(tree_data.branches);
+  coords.forEach(set_of_coords => {
     drawTrunkOrBranch(set_of_coords);
   });
+  tree_data.leaves.forEach(leaf => {
+    drawLeaf(leaf);
+  })
 }
 
 function drawTrunkOrBranch(coord_arr) {
@@ -229,6 +233,15 @@ function drawTrunkOrBranch(coord_arr) {
     c.lineTo(t_or_b[i].x, t_or_b[i].y);
   }
   c.fillStyle = '#3B2112';
+  c.fill();
+  c.closePath();
+}
+
+function drawLeaf(petiole) {
+  c.beginPath();
+  c.moveTo(petiole.x, petiole.y);
+  c.arc(petiole.x, petiole.y, 5, 0, 2 * Math.PI, false);
+  c.fillStyle = 'green';
   c.fill();
   c.closePath();
 }
