@@ -5,12 +5,12 @@
   "private": true,
   "dependencies": {},
   "devDependencies": {
-    "webpack": "^4.16.1",
-    "webpack-command": "^0.4.1"
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12"
   },
   "scripts": {
-    "build": "webpack --config webpack.config.js --mode production",
-    "watch": "webpack --watch --config webpack.config.js --mode development"
+    "build": "webpack-cli --config webpack.config.js --mode production",
+    "watch": "webpack-cli --watch --config webpack.config.js --mode development"
   },
   "repository": {
     "type": "git",
