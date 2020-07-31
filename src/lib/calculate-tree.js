@@ -1,4 +1,4 @@
-import {calcRandomness, toHundredths} from './utilities';
+import {calcRandomness, getRandInt, toHundredths} from './utilities';
 
 function calcTree(tree_params) {
   const trunk = calcTrunk({...tree_params});
@@ -33,7 +33,7 @@ function genParams({fork, base_width, end_width, length, angle}, length_var, ang
   ]
 }
 
-function calcBranches({start, width, taper, length, parent_angle, length_var, angle_var, branch_lev}) {
+function calcBranches({start, width, taper, length, parent_angle, length_var, angle_var, branch_lev, leaf_colors}) {
   const branches = [];
   let leaves;
 
@@ -58,7 +58,7 @@ function calcBranches({start, width, taper, length, parent_angle, length_var, an
     if (i < branch_lev - 1) {
       set_params = current_params.reduce((acc, params) => acc.concat(genParams({...params}, length_var, angle_var)), []);
     } else {
-      leaves = current_params.map(params => params.fork);
+      leaves = current_params.map(params => { return {...params.fork, color: leaf_colors[getRandInt(0, leaf_colors.length - 1)]}});
     }
   }
   return {
